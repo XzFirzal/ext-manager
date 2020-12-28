@@ -124,6 +124,24 @@ new Bot({
     ownerBypass: Boolean,
     insensitive: Boolean,
     filters: Array,
+    helpCommand: {
+        embed: Discord.MessageEmbed,
+        hideDuplicate: Boolean,
+        decorator: {
+            group: {
+                title: String,
+                separator: String
+            },
+            command: {
+                title: String,
+                separator: String,
+                notFound: String
+            }
+        }
+    },
+    extensionCommand: {
+        embed: Discord.MessageEmbed
+    },
     ...Discord.ClientOptions
 })
 ```
@@ -186,4 +204,54 @@ module.exports = {
 ```
 - Node version must be not less than v10.x to avoid any bugs
 - Discord.js version must be 12.x or so
+```
+
+# Example of adding help command
+
+at the main file
+```js
+const { Bot } = require('ext-manager')
+
+const bot = new Bot({
+    ...BotParameters
+})
+
+bot.loadExtension('help.js')
+
+bot.login('BOT_TOKEN')
+```
+
+at help.js
+```js
+const { Commands } = require('ext-manager')
+const { HelpCommand } = Commands()
+
+module.exports = new HelpCommand({
+    ...CommandProperty
+})
+```
+
+# Example of adding extension command
+
+at the main file
+```js
+const { Bot } = require('ext-manager')
+
+const bot = new Bot({
+    ...BotParameters
+})
+
+bot.loadExtension('extension.js')
+
+bot.login('BOT_TOKEN')
+```
+
+at extension.js
+```js
+const { Commands } = require('ext-manager')
+const { ExtensionCommand } = Commands()
+
+module.exports = new ExtensionCommand({
+    ...CommandProperty
+})
 ```

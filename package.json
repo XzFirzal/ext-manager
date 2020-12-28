@@ -1,0 +1,37 @@
+{
+  "name": "ext-manager",
+  "version": "1.2.1",
+  "description": "A package to manage an extensions for event listeners or discord bot commands with ease",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test"
+  },
+  "keywords": [
+    "extension",
+    "manager",
+    "discord.js",
+    "eventmanager",
+    "commandhandler",
+    "discordbot",
+    "eventemitter",
+    "event",
+    "command"
+  ],
+  "author": "Azusfin#9887",
+  "license": "MIT",
+  "dependencies": {
+    "@discordjs/collection": "^0.1.6",
+    "discord-paginator.js": "^1.0.2",
+    "fs": "0.0.1-security",
+    "ms": "^2.1.2",
+    "path": "^0.12.7"
+  },
+  "engines": {
+    "node": ">= 10.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/XzFirzal/ext-manager/"
+  },
+  "homepage": "https://github.com/XzFirzal/ext-manager/"
+}
