@@ -3,9 +3,9 @@
 function isOwner(owner, userID, addition = []) {
     const conditions = [addition.some(id => id == userID)]
     if (owner.members) {
-        condition.push(owner.members.some(us => userID == us.id))
+        conditions.push(owner.members.some(us => userID == us.id))
     } else {
-        condition.push(owner.id == userID)
+        conditions.push(owner.id == userID)
     }
     return conditions.some(condition => condition)
 }
