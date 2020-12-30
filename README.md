@@ -120,6 +120,7 @@ new EventManager(eventEmitter)
 ```js
 new Bot({
     prefix: Array<Function || String> || Function || String,
+    owner: Array,
     respondBot: Boolean,
     ownerBypass: Boolean,
     insensitive: Boolean,
@@ -140,6 +141,9 @@ new Bot({
         }
     },
     extensionCommand: {
+        embed: Discord.MessageEmbed
+    },
+    evalCommand: {
         embed: Discord.MessageEmbed
     },
     ...Discord.ClientOptions
@@ -252,6 +256,31 @@ const { Commands } = require('ext-manager')
 const { ExtensionCommand } = Commands()
 
 module.exports = new ExtensionCommand({
+    ...CommandProperty
+})
+```
+
+# Example of adding eval command
+
+at the main file
+```js
+const { Bot } = require('ext-manager')
+
+const bot = new Bot({
+    ...BotParameters
+})
+
+bot.loadExtension('eval.js')
+
+bot.login('BOT_TOKEN')
+```
+
+at eval.js
+```js
+const { Commands } = require('ext-manager')
+const { EvalCommand } = Commands()
+
+module.exports = new EvalCommand({
     ...CommandProperty
 })
 ```

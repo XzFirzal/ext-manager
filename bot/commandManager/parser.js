@@ -1,11 +1,13 @@
 'use strict';
 
-function isOwner(owner, userID) {
+function isOwner(owner, userID, addition = []) {
+    const conditions = [addition.some(id => id == userID)]
     if (owner.members) {
-        return owner.members.some(us => userID == us.id)
+        condition.push(owner.members.some(us => userID == us.id))
     } else {
-        return owner.id == userID
+        condition.push(owner.id == userID)
     }
+    return conditions.some(condition => condition)
 }
 
 function hasPerms(message, perm, member) {

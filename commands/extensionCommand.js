@@ -25,6 +25,7 @@ function arraySplitter(array, pages = 10) {
 class ExtensionCommand {
     constructor(entries) {
         this.name = 'extension'
+        this.ownerOnly = 'This command is can only used by bot developers!'
         Object.assign(this, entries)
         this.type = 'command'
     }
@@ -130,7 +131,7 @@ class ExtensionCommand {
             const Paginator = new BasePaginator({
                 pages: content,
                 timeout: 90000,
-                filter: (reaction, user) => isOwner(client.owner, user.id)
+                filter: (reaction, user) => isOwner(client.owner, user.id, [...options.owner, message.author.id])
             })
 
             Paginator.spawn(message.channel)

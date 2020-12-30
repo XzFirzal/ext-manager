@@ -18,6 +18,9 @@ try {
             if (!Array.isArray(entries.prefix)) entries.prefix = [entries.prefix]
             if (!entries.filters) entries.filters = []
             if (!Array.isArray(entries.filters)) entries.filters = [entries.filters]
+            if (!entries.owner) entries.owner = []
+            if (!Array.isArray(entries.owner)) entries.owner = [entries.owner]
+            if (!entries.owner.every(id => typeof id == 'string')) entries.owner = entries.owner.map(id => String(id))
             super(entries)
             this.extensions = new collection()
             this.commands = new EventEmitter()

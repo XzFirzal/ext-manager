@@ -51,7 +51,7 @@ module.exports = {
         commander:
         for (const cmd of commands) {
             const command = cmd[1]
-            if (!parser.isOwner(client.owner, message.author.id) || !options.ownerBypass) {
+            if (!parser.isOwner(client.owner, message.author.id, options.owner) || !options.ownerBypass) {
                 const now = Date.now()
                 const stamp = client.commands.cooldown.get(cmd[0])
                 const limit = stamp.get('limit')
@@ -78,12 +78,12 @@ module.exports = {
                 else res = filter(message, args, prefix, command)
                 if (!res) continue commander
             }
-            if (!parser.isOwner(client.owner, message.author.id) || !options.ownerBypass) {
+            if (!parser.isOwner(client.owner, message.author.id, options.owner) || !options.ownerBypass) {
                 if (command.guildOnly && message.channel.type == 'dm') {
                     if (typeof command.guildOnly == 'string') message.channel.send(command.guildOnly).catch(err => console.error(err))
                     continue
                 }
-                if (command.ownerOnly && !parser.isOwner(client.owner, message.author.id)) {
+                if (command.ownerOnly && !parser.isOwner(client.owner, message.author.id, options.owner)) {
                     if (typeof command.ownerOnly == 'string') message.channel.send(command.ownerOnly).catch(err => console.error(err))
                     continue
                 }
