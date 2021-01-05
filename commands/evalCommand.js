@@ -18,6 +18,22 @@ function arraySplitter(array, pages = 10) {
 	return arr
 }
 
+function merge(array, arr) {
+    const merged = []
+
+    for (let i = 0; i < arr.length; i++) {
+        const mergeArr = []
+
+        mergeArr.push(array[array[i] ? i : i - 1])
+        mergeArr.push(arr[i])
+        merged.push(mergeArr)
+
+        continue
+    }
+
+    return merged
+}
+
 function clean(text, token) {
 	return text
 		.replace(/`/g, '`' + String.fromCharCode(8203))
@@ -80,6 +96,8 @@ class EvalCommand {
             if (!argv.async) evaled = eval(`(() => {${code}})()`)
             else if (argv.async) evaled = await eval(`(async () => {${code}})()`)
 
+            code = clean(code)
+
             const type = typeof evaled
 
             if (type != 'string') evaled = util.inspect(evaled, {
@@ -95,11 +113,13 @@ class EvalCommand {
                     const contents = arraySplitter(evaled.split(''), 1975)
 					content = contents.map(ctx => `\`\`\`js\n${ctx.join('')}\`\`\``)
                 } else if (argv.embed && embed instanceof Object) {
-                    const contents = arraySplitter(evaled.split(''), 1010)
+                    let contents = arraySplitter(evaled.split(''), 1010)
+                    code = arraySplitter(code.split(''), 1010)
+                    contents = merge(contents, code)
                     content = contents.map(ctx => new Discord.MessageEmbed(embed)
                         .addFields(
-                            { name: 'Input', value: `\`\`\`js\n${code}\`\`\``},
-                            { name: 'Output', value: `\`\`\`js\n${ctx.join('')}\`\`\``},
+                            { name: 'Input', value: `\`\`\`js\n${ctx[1].join('')}\`\`\``},
+                            { name: 'Output', value: `\`\`\`js\n${ctx[0].join('')}\`\`\``},
                             { name: 'Type', value: `\`\`\`js\n${type}\`\`\``}
                         )
                     )
@@ -111,18 +131,21 @@ class EvalCommand {
             })
 
             err = clean(err, client.token)
+            code = clean(code)
 
             if (argv.console) {
                 console.error('\x1b[31m%s\x1b[0m', err)
             } else if (!argv.embed || !(embed instanceof Object)) {
-                const contents = arraySplitter(evaled.split(''), 1975)
+                const contents = arraySplitter(err.split(''), 1975)
                 content = contents.map(ctx => `Error:\`\`\`js\n${ctx.join('')}\`\`\``)
             } else if (argv.embed && embed instanceof Object) {
-                const contents = arraySplitter(evaled.split(''), 1010)
+                let contents = arraySplitter(err.split(''), 1010)
+                code = arraySplitter(code.split(''), 1010)
+                contents = merge(contents, code)
                 content = contents.map(ctx => new Discord.MessageEmbed(embed)
                     .addFields(
-                        { name: 'Input', value: `\`\`\`js\n${code}\`\`\``},
-                        { name: 'Error', value: `\`\`\`js\n${ctx.join('')}\`\`\``},
+                        { name: 'Input', value: `\`\`\`js\n${ctx[1].join('')}\`\`\``},
+                        { name: 'Error', value: `\`\`\`js\n${ctx[0].join('')}\`\`\``},
                         { name: 'Type', value: `\`\`\`js\nError\`\`\``}
                     )
                 )
