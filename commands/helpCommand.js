@@ -3,7 +3,6 @@
 
 const Discord = require('discord.js')
 const ms = require('ms')
-const { ext } = require('../typings')
 
 function goofCase (text, separator = ' ') {
   return text.split(separator).map(word => word[0].toUpperCase() + word.substr(1).toLowerCase()).join(' ')
@@ -27,7 +26,7 @@ function ordinal (number) {
   */
 class HelpCommand {
   /**
-    * @param {ext.botCommandExt} options Options for the help command
+    * @param {Object} [options] Options for the help command
     */
   constructor (options) {
     this.name = 'help'
@@ -39,7 +38,7 @@ class HelpCommand {
     * @param {Discord.Message} message A discord message
     * @param {Array<String>} args An Array of strings
     * @param {String} prefix The bot prefix
-    * @param {ext.botCommandExt} CMD The command
+    * @param {Object} CMD The command
     */
   async main (message, args, prefix, CMD) {
     const { client } = message

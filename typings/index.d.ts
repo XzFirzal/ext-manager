@@ -126,7 +126,7 @@ declare module 'ext-manager' {
 
             public extensions: Collection<String, Array<ext.botEventExt | ext.botCommandExt>>;
             public commands: ext.CommandManager;
-            public loadExtension(paths: String): Promise<Array<string>>;
+            public loadExtension(paths: String): Promise<Array<String>>;
             public reloadExtension(paths: String): Promise<Array<String>>;
             public unloadExtension(paths: String): Promise<Array<String>>;
         }

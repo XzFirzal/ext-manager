@@ -9,7 +9,6 @@ const BasePaginator = require('discord-paginator.js')
 const yargs = require('yargs-parser')
 const util = require('util')
 const { isOwner } = require('../bot/commandManager/parser')
-const { ext } = require('../typings')
 
 function arraySplitter (array, pages = 10) {
   const arr = []
@@ -55,12 +54,12 @@ function clean (text, token) {
   */
 class EvalCommand {
   /**
-    * @param {ext.botCommandExt} entries Options for the eval command
+    * @param {Object} [options] Options for the eval command
     */
-  constructor (entries) {
+  constructor (options) {
     this.name = 'eval'
     this.ownerOnly = 'This command is can only used by bot developers!'
-    Object.assign(this, entries)
+    Object.assign(this, options)
     this.type = 'command'
   }
 
@@ -68,7 +67,7 @@ class EvalCommand {
     * @param {Discord.Message} message A discord message
     * @param {Array<String>} args An Array of strings
     * @param {String} prefix The bot prefix
-    * @param {ext.botCommandExt} CMD The command
+    * @param {Object} CMD The command
     */
   async main (message, args, prefix, CMD) {
     if (!args.length) {

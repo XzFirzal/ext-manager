@@ -9,7 +9,6 @@ const unload = require('./packageManager/unload')
 const ExtError = require('../errors')
 const Discord = require('discord.js')
 const { EventEmitter } = require('events')
-const { ext } = require('../typings')
 
 /**
   * The bot class for a discord bot.
@@ -17,17 +16,17 @@ const { ext } = require('../typings')
   */
 class Bot extends Discord.Client {
   /**
-    * @param {ext.botOptions} entries Options for the bot
+    * @param {Object} options Options for the bot
     */
-  constructor (entries) {
-    if (!entries.prefix) throw new Error('Invalid prefix given')
-    if (!Array.isArray(entries.prefix)) entries.prefix = [entries.prefix]
-    if (!entries.filters) entries.filters = []
-    if (!Array.isArray(entries.filters)) entries.filters = [entries.filters]
-    if (!entries.owner) entries.owner = []
-    if (!Array.isArray(entries.owner)) entries.owner = [entries.owner]
-    if (!entries.owner.every(id => typeof id === 'string')) entries.owner = entries.owner.map(id => String(id))
-    super(entries)
+  constructor (options) {
+    if (!options.prefix) throw new Error('Invalid prefix given')
+    if (!Array.isArray(options.prefix)) options.prefix = [options.prefix]
+    if (!options.filters) options.filters = []
+    if (!Array.isArray(options.filters)) options.filters = [options.filters]
+    if (!options.owner) options.owner = []
+    if (!Array.isArray(options.owner)) options.owner = [options.owner]
+    if (!options.owner.every(id => typeof id === 'string')) options.owner = options.owner.map(id => String(id))
+    super(options)
     this.extensions = new Collection()
     this.commands = new EventEmitter()
     this.commands.collection = new Collection()

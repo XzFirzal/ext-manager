@@ -10,7 +10,6 @@ const versions = {
 const Discord = require('discord.js')
 const BasePaginator = require('discord-paginator.js')
 const { isOwner } = require('../bot/commandManager/parser')
-const { ext } = require('../typings')
 
 function arraySplitter (array, pages = 10) {
   const arr = []
@@ -29,12 +28,12 @@ function arraySplitter (array, pages = 10) {
   */
 class ExtensionCommand {
   /**
-    * @param {ext.botCommandExt} entries Options for the extension command
+    * @param {Object} [options] Options for the extension command
     */
-  constructor (entries) {
+  constructor (options) {
     this.name = 'extension'
     this.ownerOnly = 'This command is can only used by bot developers!'
-    Object.assign(this, entries)
+    Object.assign(this, options)
     this.type = 'command'
   }
 
@@ -42,7 +41,7 @@ class ExtensionCommand {
     * @param {Discord.Message} message A discord message
     * @param {Array<String>} args An Array of strings
     * @param {String} prefix The bot prefix
-    * @param {ext.botCommandExt} CMD The command
+    * @param {Object} CMD The command
     */
   async main (message, args, prefix, CMD) {
     const { client } = message

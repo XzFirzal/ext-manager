@@ -4,9 +4,9 @@ const { EventManager } = require('ext-manager')
 const eventEmitter = new EventEmitter()
 const eventManager = new EventManager(eventEmitter)
 
-eventManager.loadExtension('ext.js')
+eventManager.loadExtension('test/ext.js')
 
 eventEmitter.emit('test', 'TEST!')
 
-eventManager.reloadExtension('ext.js')
-eventManager.unloadExtension('ext.js')
+eventManager.reloadExtension('test/ext.js')
+eventManager.unloadExtension('test/ext.js')

@@ -38,7 +38,7 @@ module.exports = {
 # Example of using bot
 at the main file
 ```js
-const { Bot } = require('ext-manager') //must install discord.js package manually
+const { Bot } = require('ext-manager')
 
 const bot = new Bot({
     prefix: '!', //the bot prefix
@@ -228,7 +228,7 @@ bot.login('BOT_TOKEN')
 at help.js
 ```js
 const { Commands } = require('ext-manager')
-const { HelpCommand } = Commands()
+const { HelpCommand } = Commands
 
 module.exports = new HelpCommand({
     ...CommandProperty
@@ -253,7 +253,7 @@ bot.login('BOT_TOKEN')
 at extension.js
 ```js
 const { Commands } = require('ext-manager')
-const { ExtensionCommand } = Commands()
+const { ExtensionCommand } = Commands
 
 module.exports = new ExtensionCommand({
     ...CommandProperty
@@ -278,7 +278,7 @@ bot.login('BOT_TOKEN')
 at eval.js
 ```js
 const { Commands } = require('ext-manager')
-const { EvalCommand } = Commands()
+const { EvalCommand } = Commands
 
 module.exports = new EvalCommand({
     ...CommandProperty

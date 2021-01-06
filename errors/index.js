@@ -7,8 +7,8 @@
 class ExtError extends Error {
   /**
      * @param {String} message The error message
-     * @param {String} code The error code
-     * @param {String} path The path of the problem
+     * @param {String} [code] The error code
+     * @param {String} [path] The path of the problem
      */
   constructor (message, code, path) {
     super(`ExtError: ${message}`)
@@ -18,9 +18,10 @@ class ExtError extends Error {
     }
 
     this.name = 'ExtError'
-    this.code = `3XT${code}`
+    this.code = `3XT${code || ''}`
     this.message = message
-    this.path = path
+
+    if (path) this.path = path
   }
 }
 
