@@ -1,27 +1,62 @@
-declare module 'ext-manager' {
-    import Collection from '@discordjs/collection'
-    import { EventEmitter } from 'events'
+/* eslint-disable no-unused-vars */
 
-    export const version: String
+import { EventEmitter } from 'events'
+import { Client, ClientOptions, Message, PermissionResolvable, MessageEmbed, Collection } from 'discord.js'
 
-    interface EventExt {
+declare namespace ext {
+    interface eventExt {
         name: String;
         main: Function;
         once?: Boolean;
     }
 
-    export class EventManager {
-      constructor(emitter: EventEmitter);
-
-      public extensions: Collection<String, Array<EventExt>>;
-      public loadExtension(paths: String): Promise<Array<String>>;
-      public reloadExtension(paths: String): Promise<Array<String>>;
-      public unloadExtension(paths: String): Promise<Array<String>>;
+    interface cooldown {
+        limit?: Number;
+        timoeut?: Number;
+        target?: 'guild' | 'channel' | 'author';
+        response?: String;
     }
 
-    import { Client, ClientOptions, Message, PermissionResolvable, MessageEmbed } from 'discord.js'
+    interface permission {
+        type: 'guild' | 'channel';
+        perms: PermissionResolvable;
+        optional?: Boolean;
+        response?: String;
+    }
 
-    interface BotOptions extends ClientOptions {
+    interface arg {
+        position: Number;
+        response?: String;
+        prompt?: {
+            timeout?: Number;
+            cancelled?: String;
+            failed?: String;
+            timedOut?: String;
+        }
+    }
+
+    interface botEventExt extends eventExt {
+        type: 'event';
+    }
+
+    interface botCommandExt {
+        type: 'command';
+        name: String;
+        main: Function;
+        category?: String;
+        aliases?: Array<String>;
+        description?: String;
+        guildOnly?: Boolean;
+        ownerOnly?: Boolean;
+        usage?: String;
+        notes?: String;
+        cooldown?: cooldown;
+        permission?: permission;
+        botPermission?: permission;
+        args?: Array<arg>;
+    }
+
+    interface botOptions extends ClientOptions {
         prefix: Array<Function | String> | Function | String;
         owner?: Array<String>;
         filters?: Array<Function>;
@@ -51,77 +86,51 @@ declare module 'ext-manager' {
         };
     }
 
-    interface Cooldown {
-        limit?: Number;
-        timoeut?: Number;
-        target?: 'guild' | 'channel' | 'author';
-        response?: String;
-    }
-
-    interface BotEventExt extends EventExt {
-        type: 'event';
-    }
-
-    interface Permission {
-        type: 'guild' | 'channel';
-        perms: PermissionResolvable;
-        optional?: Boolean;
-        response?: String;
-    }
-
-    interface Arg {
-        position: Number;
-        response?: String;
-        prompt?: {
-            timeout?: Number;
-            cancelled?: String;
-            failed?: String;
-            timedOut?: String;
-        }
-    }
-
-    interface BotCommandExt {
-        type: 'command';
-        name: String;
-        main: Function;
-        category?: String;
-        aliases?: Array<String>;
-        description?: String;
-        guildOnly?: Boolean;
-        ownerOnly?: Boolean;
-        usage?: String;
-        notes?: String;
-        cooldown?: Cooldown;
-        permission?: Permission;
-        botPermission?: Permission;
-        args?: Array<Arg>;
-    }
-
     class Command {
-      constructor(options: BotCommandExt);
-      public main(message: Message, args: Array<String>, prefix: String, CMD: BotCommandExt): void;
-    }
+      constructor(options: botCommandExt);
 
-    interface CommandList {
-        HelpCommand: Command;
-        EvalCommand: Command;
-        ExtensionCommand: Command;
+      public main(message: Message, args: Array<String>, prefix: String, CMD: botCommandExt): void;
     }
 
     class CommandManager extends EventEmitter {
-        collection: Collection<String, BotCommandExt>;
-        cooldown: Collection<String, Cooldown>;
+        collection: Collection<String, botCommandExt>;
+        cooldown: Collection<String, cooldown>;
+    }
+}
+
+declare module 'ext-manager' {
+    namespace manager {
+        const version: String
+
+        interface ext {
+            ext: ext;
+        }
+
+        interface Commands {
+            HelpCommand: ext.Command;
+            EvalCommand: ext.Command;
+            ExtensionCommand: ext.Command;
+        }
+
+        class EventManager {
+          constructor(emitter: EventEmitter);
+
+            public extensions: Collection<String, Array<ext.eventExt>>;
+            public loadExtension(paths: String): Promise<Array<String>>;
+            public reloadExtension(paths: String): Promise<Array<String>>;
+            public unloadExtension(paths: String): Promise<Array<String>>;
+        }
+
+        class Bot extends Client {
+          constructor(options: ext.botOptions);
+
+            public extensions: Collection<String, Array<ext.botEventExt | ext.botCommandExt>>;
+            public commands: ext.CommandManager;
+            public loadExtension(paths: String): Promise<Array<string>>;
+            public reloadExtension(paths: String): Promise<Array<String>>;
+            public unloadExtension(paths: String): Promise<Array<String>>;
+        }
     }
 
-    export class Bot extends Client {
-      constructor(options: BotOptions);
-
-        public extensions: Collection<String, Array<BotEventExt | BotCommandExt>>;
-        public commands: CommandManager;
-        public loadExtension(paths: String): Promise<Array<string>>;
-        public reloadExtension(paths: String): Promise<Array<String>>;
-        public unloadExtension(paths: String): Promise<Array<String>>;
-    }
-
-    export function Commands(): CommandList;
+    export = manager
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use strict'
 
 const fs = require('fs')
@@ -6,22 +7,24 @@ const Collection = require('@discordjs/collection')
 const load = require('./packageManager/load')
 const unload = require('./packageManager/unload')
 const ExtError = require('../errors')
+const { EventEmitter } = require('events')
 
 /**
- * The Event Manager for managing any events emitted by Event Emitter.
- */
+  * The Event Manager for managing any events emitted by Event Emitter.
+  */
 class EventManager {
   /**
-     * @param {import {EventEmitter} from 'events'} emitter The Event Emitter
-     */
+    * @param {EventEmitter} emitter The Event Emitter
+    */
   constructor (emitter) {
     this.emitter = emitter
     this.extensions = new Collection()
   }
 
   /**
-     * @param {String} paths The path to the file
-     */
+    * @param {String} paths The path to the file
+    * @returns {Array<String>}
+    */
   async loadExtension (paths) {
     if (!path.isAbsolute(paths)) paths = path.resolve(process.cwd(), paths)
     if (this.extensions.get(paths)) throw new ExtError(`Extension ${paths} already loaded`, 'Y35', paths)
@@ -37,8 +40,9 @@ class EventManager {
   }
 
   /**
-     * @param {String} paths The path to the file
-     */
+    * @param {String} paths The path to the file
+    * @returns {Array<String>}
+    */
   async reloadExtension (paths) {
     if (!path.isAbsolute(paths)) paths = path.resolve(process.cwd(), paths)
     if (!this.extensions.get(paths)) throw new ExtError(`Extension ${paths} has never been loaded`, 'N0', paths)
@@ -57,8 +61,9 @@ class EventManager {
   }
 
   /**
-     * @param {String} paths The path to the file
-     */
+    * @param {String} paths The path to the file
+    * @returns {Array<String>}
+    */
   async unloadExtension (paths) {
     if (!path.isAbsolute(paths)) paths = path.resolve(process.cwd(), paths)
     if (!this.extensions.get(paths)) throw new ExtError(`Extension ${paths} has never been loaded`, 'N0', paths)

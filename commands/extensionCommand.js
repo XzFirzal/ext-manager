@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use strict'
 
 const ms = require('ms')
@@ -6,9 +7,10 @@ const versions = {
   discord: require('discord.js').version,
   node: process.version.replace('v', '')
 }
-const discord = require('discord.js')
+const Discord = require('discord.js')
 const BasePaginator = require('discord-paginator.js')
 const { isOwner } = require('../bot/commandManager/parser')
+const { ext } = require('../typings')
 
 function arraySplitter (array, pages = 10) {
   const arr = []
@@ -23,12 +25,12 @@ function arraySplitter (array, pages = 10) {
 }
 
 /**
- * An extension command for a discord bot to manage extensions.
- */
+  * An extension command for a discord bot to manage extensions.
+  */
 class ExtensionCommand {
   /**
-     * @param {BotCommandExt} entries Options for the extension command
-     */
+    * @param {ext.botCommandExt} entries Options for the extension command
+    */
   constructor (entries) {
     this.name = 'extension'
     this.ownerOnly = 'This command is can only used by bot developers!'
@@ -37,11 +39,11 @@ class ExtensionCommand {
   }
 
   /**
-     * @param {discord.Message} message A discord message
-     * @param {Array<String>} args An Array of strings
-     * @param {String} prefix The bot prefix
-     * @param {BotCommandExt} CMD The command
-     */
+    * @param {Discord.Message} message A discord message
+    * @param {Array<String>} args An Array of strings
+    * @param {String} prefix The bot prefix
+    * @param {ext.botCommandExt} CMD The command
+    */
   async main (message, args, prefix, CMD) {
     const { client } = message
     const { options } = client
@@ -72,7 +74,7 @@ class ExtensionCommand {
       const contents = [version, uptime, memoryUsage, pidAndPpid, stats, messageCache, info].join('\n')
 
       if (embed instanceof Object) {
-        const msgEmbed = new discord.MessageEmbed(embed)
+        const msgEmbed = new Discord.MessageEmbed(embed)
           .setDescription(contents)
         message.channel.send(msgEmbed).catch(console.error)
       } else {
@@ -129,7 +131,7 @@ class ExtensionCommand {
       const contents = arraySplitter((arr.length ? arr.join('\n') : 'None').split(''), 2030)
       const content = contents.map(ctx => {
         if (embed instanceof Object) {
-          const msgEmbed = new discord.MessageEmbed(embed)
+          const msgEmbed = new Discord.MessageEmbed(embed)
             .setDescription(ctx.join('').trim())
           return msgEmbed
         }

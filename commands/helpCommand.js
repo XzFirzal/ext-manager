@@ -1,14 +1,16 @@
+/* eslint-disable no-unused-vars */
 'use strict'
 
-const discord = require('discord.js')
+const Discord = require('discord.js')
 const ms = require('ms')
+const { ext } = require('../typings')
 
 function goofCase (text, separator = ' ') {
   return text.split(separator).map(word => word[0].toUpperCase() + word.substr(1).toLowerCase()).join(' ')
 }
 
 function parsePerm (resolvable, separator) {
-  const perms = new discord.Permissions(resolvable)
+  const perms = new Discord.Permissions(resolvable)
   return perms.toArray().map(perm => goofCase(perm, '_')).join(separator)
 }
 
@@ -21,24 +23,24 @@ function ordinal (number) {
 }
 
 /**
- * An help command for a discord bot.
- */
+  * An help command for a discord bot.
+  */
 class HelpCommand {
   /**
-     * @param {BotCommandExt} entries Options for the help command
-     */
-  constructor (entries) {
+    * @param {ext.botCommandExt} options Options for the help command
+    */
+  constructor (options) {
     this.name = 'help'
-    Object.assign(this, entries)
+    Object.assign(this, options)
     this.type = 'command'
   }
 
   /**
-     * @param {discord.Message} message A discord message
-     * @param {Array<String>} args An Array of strings
-     * @param {String} prefix The bot prefix
-     * @param {BotCommandExt} CMD The command
-     */
+    * @param {Discord.Message} message A discord message
+    * @param {Array<String>} args An Array of strings
+    * @param {String} prefix The bot prefix
+    * @param {ext.botCommandExt} CMD The command
+    */
   async main (message, args, prefix, CMD) {
     const { client } = message
     const { options } = client
@@ -50,7 +52,7 @@ class HelpCommand {
       const group = decorator ? (decorator.group || {}) : {}
       const groupTitle = group.title || '{name} - {count}'
       const separator = group.separator || ', '
-      const commands = new discord.Collection()
+      const commands = new Discord.Collection()
       let command = client.commands.collection.array()
       if (hideDuplicate) {
         const arr = []
@@ -64,7 +66,7 @@ class HelpCommand {
       }
       if (embed instanceof Object) {
         embed.description = (embed.description || `{prefix}${CMD.name} [command], to see more information about command!`).replace(/\{prefix\}/g, prefix)
-        const msgEmbed = new discord.MessageEmbed(embed)
+        const msgEmbed = new Discord.MessageEmbed(embed)
         for (const groups of commands) {
           msgEmbed.addField(groupTitle.replace(/\{name\}/g, groups[0]).replace(/\{count\}/g, groups[1].length), groups[1].join(separator))
         }
@@ -119,7 +121,7 @@ ${v.join(separator)}`).join('\n\n')}\`\`\``
       description = description.trim()
 
       if (embed instanceof Object) {
-        const msgEmbed = new discord.MessageEmbed(embed)
+        const msgEmbed = new Discord.MessageEmbed(embed)
           .setTitle(name)
           .setDescription(`\`\`\`\n${description}\`\`\``)
           .addField('Usage', `\`\`\`\n${usage}\`\`\``)

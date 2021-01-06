@@ -1,6 +1,6 @@
 {
   "name": "ext-manager",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "A package to manage an extensions for event listeners or discord bot commands with ease",
   "main": "index.js",
   "types": "typings/index.d.ts",
@@ -21,9 +21,8 @@
   "author": "Azusfin#9887",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^12.5.1",
-    "@discordjs/collection": "^0.1.6",
     "discord-paginator.js": "^1.0.2",
+    "discord.js": "^12.5.1",
     "ms": "^2.1.2",
     "yargs-parser": "^20.2.4"
   },

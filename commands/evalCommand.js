@@ -1,6 +1,7 @@
 /* eslint-disable no-ex-assign */
 /* eslint-disable no-eval */
 /* eslint-disable node/handle-callback-err */
+/* eslint-disable no-unused-vars */
 'use strict'
 
 const Discord = require('discord.js')
@@ -8,6 +9,7 @@ const BasePaginator = require('discord-paginator.js')
 const yargs = require('yargs-parser')
 const util = require('util')
 const { isOwner } = require('../bot/commandManager/parser')
+const { ext } = require('../typings')
 
 function arraySplitter (array, pages = 10) {
   const arr = []
@@ -22,14 +24,18 @@ function arraySplitter (array, pages = 10) {
 }
 
 function merge (array, arr) {
+  const len = Math.max(array.length, arr.length)
   const merged = []
+  let o = -1
 
-  for (let i = 0; i < arr.length; i++) {
+  for (let i = 0; i < len; i++) {
     const mergeArr = []
 
-    mergeArr.push(array[array[i] ? i : i - 1])
-    mergeArr.push(arr[i])
+    mergeArr.push(array[i] || array[o])
+    mergeArr.push(arr[i] || arr[o])
     merged.push(mergeArr)
+
+    if (array[i] && arr[i]) o++
 
     continue
   }
@@ -45,12 +51,12 @@ function clean (text, token) {
 }
 
 /**
- * an eval command for a discord bot developer.
- */
+  * an eval command for a discord bot developer.
+  */
 class EvalCommand {
   /**
-     * @param {BotCommandExt} entries Options for the eval command
-     */
+    * @param {ext.botCommandExt} entries Options for the eval command
+    */
   constructor (entries) {
     this.name = 'eval'
     this.ownerOnly = 'This command is can only used by bot developers!'
@@ -59,11 +65,11 @@ class EvalCommand {
   }
 
   /**
-     * @param {discord.Message} message A discord message
-     * @param {Array<String>} args An Array of strings
-     * @param {String} prefix The bot prefix
-     * @param {BotCommandExt} CMD The command
-     */
+    * @param {Discord.Message} message A discord message
+    * @param {Array<String>} args An Array of strings
+    * @param {String} prefix The bot prefix
+    * @param {ext.botCommandExt} CMD The command
+    */
   async main (message, args, prefix, CMD) {
     if (!args.length) {
       message.channel.send('Please enter a code to evaluate with!').catch(console.error)
