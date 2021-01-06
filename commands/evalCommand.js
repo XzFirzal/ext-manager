@@ -41,7 +41,7 @@ function clean (text, token) {
   return text
     .replace(/`/g, '`' + String.fromCharCode(8203))
     .replace(/@/g, '@' + String.fromCharCode(8203))
-    .replace(new RegExp(token), '[Token]')
+    .replace(new RegExp(token, 'g'), '[Token]')
 }
 
 /**
@@ -110,7 +110,7 @@ class EvalCommand {
       if (!argv.async) evaled = eval(`(() => {${code}})()`)
       else if (argv.async) evaled = await eval(`(async () => {${code}})()`)
 
-      code = clean(code)
+      code = clean(code, client.token)
 
       const type = typeof evaled
 
@@ -147,7 +147,7 @@ class EvalCommand {
       })
 
       err = clean(err, client.token)
-      code = clean(code)
+      code = clean(code, client.token)
 
       if (argv.console) {
         console.error('\x1b[31m%s\x1b[0m', err)
