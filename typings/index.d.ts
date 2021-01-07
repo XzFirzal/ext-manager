@@ -98,6 +98,14 @@ declare namespace ext {
     }
 }
 
+declare namespace Commands {
+    class HelpCommand extends ext.Command { }
+
+    class ExtensionCommand extends ext.Command { }
+
+    class EvalCommand extends ext.Command { }
+}
+
 declare module 'ext-manager' {
     namespace manager {
         const version: String
@@ -107,9 +115,7 @@ declare module 'ext-manager' {
         }
 
         interface Commands {
-            HelpCommand: ext.Command;
-            EvalCommand: ext.Command;
-            ExtensionCommand: ext.Command;
+            Commands: Commands;
         }
 
         class EventManager {
