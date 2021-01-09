@@ -1,12 +1,16 @@
 /* eslint-disable no-labels */
 'use strict'
 
+const { MessageEmbed } = require('discord.js')
 const parser = require('./parser')
 const ms = require('ms')
 
 module.exports = {
   type: 'event',
   name: 'message',
+  /**
+   * @param {import('discord.js').Message} message
+   */
   async main (message) {
     if (message.guild && !message.guild.owner) await message.guild.members.fetch(message.guild.ownerID).catch(err => console.error(err))
 
@@ -14,7 +18,7 @@ module.exports = {
     const { options } = client
     const now = Date.now()
 
-        ;(async () => {
+    ;(async () => {
       if (!client.rest.ping.request) {
         client.owner = (await client.fetchApplication().catch(err => console.error(err)) || {}).owner
         client.rest.ping.latency = Date.now() - now
@@ -25,6 +29,16 @@ module.exports = {
         }, 90000)
       }
     })()
+
+    /**
+     * @type {import('discord.js').Permissions}
+     */
+    const permissions = message.channel.permissionsFor(message.guild.me)
+
+    if (!permissions.has('SEND_MESSAGES')) {
+      if (typeof options.noPermission === 'string' || options.noPermission instanceof MessageEmbed) message.author.send(typeof options.noPermission === 'string' ? options.noPermission.replace(/\{guild\}/g, message.guild.id).replace(/\{channel\}/g, message.channel.id) : Object.fromEntries(Object.entries(options.noPermission).map(prop => [prop[0], typeof prop[1] === 'string' ? prop[1].replace(/\{guild\}/g, message.guild.id).replace(/\{channel\}/g, message.channel.id) : prop[1]]))).catch(err => err)
+      return
+    }
 
     const prefixes = []
 
@@ -63,7 +77,7 @@ module.exports = {
           if (stamp.get(target).length >= limit) {
             const expirationTime = stamp.get(target)[0] + timeout
             if (now <= expirationTime) {
-              if (command.cooldown && command.cooldown.response) message.channel.send(command.cooldown.response.replace(/\{time\}/g, ms(now - expirationTime, { long: true }))).catch(err => console.error(err))
+              if (command.cooldown && command.cooldown.response && (typeof command.cooldown.response === 'string' || command.cooldown.response instanceof MessageEmbed)) message.channel.send(typeof command.cooldown.response === 'string' ? command.cooldown.response.replace(/\{time\}/g, ms(now - expirationTime, { long: true })) : Object.fromEntries(Object.entries(command.cooldown.response).map(prop => [prop[0], typeof prop[1] === 'string' ? prop[1].replace(/\{time\}/g, ms(now - expirationTime, { long: true })) : prop[1]]))).catch(err => console.error(err))
               continue commander
             }
           }
@@ -81,21 +95,21 @@ module.exports = {
       }
       if (!parser.isOwner(client.owner, message.author.id, options.owner) || !options.ownerBypass) {
         if (command.guildOnly && message.channel.type === 'dm') {
-          if (typeof command.guildOnly === 'string') message.channel.send(command.guildOnly).catch(err => console.error(err))
+          if (typeof command.guildOnly === 'string' || command.guildOnly instanceof MessageEmbed) message.channel.send(command.guildOnly).catch(err => console.error(err))
           continue
         }
         if (command.ownerOnly && !parser.isOwner(client.owner, message.author.id, options.owner)) {
-          if (typeof command.ownerOnly === 'string') message.channel.send(command.ownerOnly).catch(err => console.error(err))
+          if (typeof command.ownerOnly === 'string' || command.ownerOnly instanceof MessageEmbed) message.channel.send(command.ownerOnly).catch(err => console.error(err))
           continue
         }
         if (command.permission && !parser.hasPerms(message, command.permission, message.member)) {
-          if (typeof command.permission.response === 'string') message.channel.send(command.permission.response).catch(err => console.error(err))
+          if (typeof command.permission.response === 'string' || command.permission.response instanceof MessageEmbed) message.channel.send(command.permission.response).catch(err => console.error(err))
           continue
         }
       }
 
       if (command.botPermission && !parser.hasPerms(message, command.botPermission, message.guild.me)) {
-        if (typeof command.botPermission.response === 'string') message.channel.send(command.botPermission.response).catch(err => console.error(err))
+        if (typeof command.botPermission.response === 'string' || command.botPermission.response instanceof MessageEmbed) message.channel.send(command.botPermission.response).catch(err => console.error(err))
         continue
       }
 

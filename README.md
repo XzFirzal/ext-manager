@@ -125,6 +125,7 @@ new Bot({
     ownerBypass: Boolean,
     insensitive: Boolean,
     filters: Array,
+    noPermission: String,
     helpCommand: {
         embed: Discord.MessageEmbed,
         hideDuplicate: Boolean,

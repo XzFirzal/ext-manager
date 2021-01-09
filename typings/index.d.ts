@@ -14,24 +14,24 @@ declare namespace ext {
         limit?: Number;
         timoeut?: Number;
         target?: 'guild' | 'channel' | 'author';
-        response?: String;
+        response?: String | MessageEmbed;
     }
 
     interface permission {
         type: 'guild' | 'channel';
         perms: PermissionResolvable;
         optional?: Boolean;
-        response?: String;
+        response?: String | MessageEmbed;
     }
 
     interface arg {
         position: Number;
-        response?: String;
+        response?: String | MessageEmbed;
         prompt?: {
             timeout?: Number;
-            cancelled?: String;
-            failed?: String;
-            timedOut?: String;
+            cancelled?: String | MessageEmbed;
+            failed?: String | MessageEmbed;
+            timedOut?: String | MessageEmbed;
         }
     }
 
@@ -42,12 +42,12 @@ declare namespace ext {
     interface botCommandExt {
         type: 'command';
         name: String;
-        main: Function;
+        main(message: Message, args: String[], prefix: String, CMD: botCommandExt);
         category?: String;
         aliases?: Array<String>;
         description?: String;
-        guildOnly?: Boolean;
-        ownerOnly?: Boolean;
+        guildOnly?: String | MessageEmbed;
+        ownerOnly?: String | MessageEmbed;
         usage?: String;
         notes?: String;
         cooldown?: cooldown;
@@ -63,6 +63,7 @@ declare namespace ext {
         respondBot?: Boolean;
         ownerBypass?: Boolean;
         insensitive?: Boolean;
+        noPermission?: String | MessageEmbed;
         helpCommand?: {
             embed?: MessageEmbed;
             hideDuplicate?: Boolean;

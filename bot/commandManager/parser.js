@@ -1,5 +1,7 @@
 'use strict'
 
+const { MessageEmbed } = require('discord.js')
+
 function isOwner (owner, userID, addition = []) {
   const conditions = [addition.some(id => id === userID)]
   if (owner.members) {
@@ -27,7 +29,7 @@ function hasPerms (message, perm, member) {
 
 async function checkArgs (message, args, arg) {
   if (args[arg.position]) return true
-  if (typeof arg.response === 'string') message.channel.send(arg.response).catch(err => console.error(err))
+  if (typeof arg.response === 'string' || arg.response instanceof MessageEmbed) message.channel.send(arg.response).catch(err => console.error(err))
   if (!(arg.prompt instanceof Object)) return
   try {
     const timeout = arg.prompt.timeout > 0 ? arg.prompt.timeout : 30
@@ -35,15 +37,15 @@ async function checkArgs (message, args, arg) {
     const msg = await message.channel.awaitMessages(filter, { max: 1, time: timeout * 1000, errors: ['timed out'] })
     const res = msg.first().content
     if (res === 'cancel') {
-      if (typeof arg.prompt.cancelled === 'string') message.channel.send(arg.prompt.cancelled)
+      if (typeof arg.prompt.cancelled === 'string' || arg.prompt.cancelled instanceof MessageEmbed) message.channel.send(arg.prompt.cancelled)
       return false
     }
     args.push(...res.split(' '))
     if (args[arg.position]) return true
-    if (typeof arg.prompt.failed === 'string') message.channel.send(arg.prompt.failed)
+    if (typeof arg.prompt.failed === 'string' || arg.prompt.failed instanceof MessageEmbed) message.channel.send(arg.prompt.failed)
     return false
   } catch {
-    if (typeof arg.prompt.timedOut === 'string') message.channel.send(arg.prompt.timedOut)
+    if (typeof arg.prompt.timedOut === 'string' || arg.prompt.timedOut instanceof MessageEmbed) message.channel.send(arg.prompt.timedOut)
     return false
   }
 }
